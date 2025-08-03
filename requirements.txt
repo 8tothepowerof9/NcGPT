@@ -1,0 +1,10 @@
+openai
+tiktoken
+boto3
+langchain-community
+langchain
+python-dotenv
+unstructured
+unstructured[pdf]
+qdrant_client
+fastembed
