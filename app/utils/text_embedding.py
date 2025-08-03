@@ -13,6 +13,6 @@ def compute_dense_vector(text: str = None) -> List[float]:
         # With the `text-embedding-3` class
         # of models, you can specify the size
         # of the embeddings you want returned.
-        # dimensions=1024
+        # dimensions=3072
     )
     return embeddings.embed_query(text=text)

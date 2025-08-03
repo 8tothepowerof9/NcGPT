@@ -3,6 +3,7 @@ import uuid
 from typing import List
 from dotenv import load_dotenv
 from qdrant_client import QdrantClient, models
+from qdrant_client.models import QueryResponse
 
 load_dotenv()
 
@@ -48,3 +49,18 @@ def add_vectors(
         collection_name=collection_name,
         points=points
     )
+    
+def retrieve(
+    collection_name: str,
+    query: List[float]
+) -> QueryResponse:
+    
+    search_result = client.query_points(
+        collection_name=collection_name,
+        query=query,
+        with_payload=True,
+        limit=3,
+        using="text-embedding"
+    ).points
+    
+    return search_result

@@ -9,7 +9,12 @@ if __name__ == "__main__":
         "Chunk 2: Core explanation or body content",
         "Chunk 3: Supporting examples or data",
         "Chunk 4: Analysis or interpretation",
-        "Chunk 5: Summary or conclusion"
+        "Chunk 5: Summary or conclusion",
+        "My name is Duy",
+        "Im 20 years old",
+        "Im an intern at FPTSoftware",
+        "Today is Sunday",
+        "The weather is 24 degree Celsius today"
     ]
     
     create_collection(collection_name=COLLECTION_NAME)
