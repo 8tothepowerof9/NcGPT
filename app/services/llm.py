@@ -2,7 +2,7 @@ from typing import Optional, Union
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from langchain_core.language_models.chat_models import BaseChatModel
-from ..config import LLM_PROVIDER, OPENAI_API_KEY, MODEL_NAME
+from ..core.config import LLM_PROVIDER, OPENAI_API_KEY, MODEL_NAME
 from ..models import Provider
 
 

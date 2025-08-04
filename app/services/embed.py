@@ -3,7 +3,7 @@ from langchain_core.embeddings import Embeddings
 from langchain_ollama import OllamaEmbeddings
 from langchain_openai import OpenAIEmbeddings
 from ..models import EmbedProvider
-from ..config import LLM_PROVIDER, OPENAI_API_KEY, MODEL_NAME
+from ..core.config import LLM_PROVIDER, OPENAI_API_KEY, MODEL_NAME
 
 
 class Embedder:
