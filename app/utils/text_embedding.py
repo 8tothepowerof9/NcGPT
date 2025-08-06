@@ -1,5 +1,6 @@
 import os
 import torch
+import asyncio
 from typing import List, Tuple
 from dotenv import load_dotenv
 from langchain_ollama import OllamaEmbeddings
@@ -43,5 +44,14 @@ class Embedder:
         values = vec[indices].tolist() if indices else []
 
         return indices, values
+    
+    @staticmethod
+    async def hybrid_embed_query(text):
+        dense_task = Embedder.compute_dense_vector(text=text)
+        sparse_task = Embedder.compute_sparse_vector(text=text)
+        dense_vector, (sparse_indices, sparse_values) = await asyncio.gather(
+            dense_task, sparse_task
+        )
+        return dense_vector, sparse_indices, sparse_values
     
 embedder = Embedder()

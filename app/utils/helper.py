@@ -1,4 +1,5 @@
 import heapq
+import requests
 import traceback
 from typing import List
 from bs4 import BeautifulSoup
@@ -57,5 +58,13 @@ class Helper:
     def compact_text(soup: BeautifulSoup) -> str:
         raw = soup.get_text(separator=" ")
         return " ".join(raw.split())
+    
+    @staticmethod
+    def get_urls_from_sitemap(sitemap_url: str) -> list[str]:
+        response = requests.get(sitemap_url)
+        response.raise_for_status()
+        # Parse as XML
+        soup = BeautifulSoup(response.text, "xml")
+        return [loc.get_text(strip=True) for loc in soup.find_all("loc")]
     
 helper = Helper()
