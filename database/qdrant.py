@@ -1,14 +1,8 @@
-import os
 import uuid
-from typing import List
-from dotenv import load_dotenv
+from typing import List, Tuple
 from qdrant_client import QdrantClient, models
 from qdrant_client.models import QueryResponse
-
-load_dotenv()
-
-QDRANT_URL = os.getenv("QDRANT_URL")
-QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+from app.config import QDRANT_API_KEY, QDRANT_URL
 
 client = QdrantClient(
     url=QDRANT_URL,
@@ -26,27 +20,35 @@ class QdrantWorker():
             client.create_collection(
                 collection_name=collection_name,
                 vectors_config={
-                    "text-embedding": models.VectorParams(
-                        size=3072,
+                    "dense-embedding": models.VectorParams(
+                        size=1024   ,
                         distance=models.Distance.COSINE
                     )
                 },
+                sparse_vectors_config={
+                    "sparse-embedding": models.SparseVectorParams(
+                        index=models.SparseIndexParams(on_disk=False)
+                    )
+                }
             )
 
     @staticmethod
     def add_vectors(
         collection_name: str,
         dense_vectors: List[List[float]],
-        texts: List[str]
+        texts: List[str],
+        sparse_vectors: Tuple[List[int], List[float]]
     ) -> None:
         
         points = [
             models.PointStruct(
                 id=str(uuid.uuid4()),
-                vector={"text-embedding": dense_vector},
+                vector={
+                    "dense-embedding": dense_vector,
+                    "sparse-embedding": models.SparseVector(indices=indices, values=values)},
                 payload={"text": text}
             )
-            for dense_vector, text in zip(dense_vectors, texts)
+            for dense_vector, (indices, values), text in zip(dense_vectors, sparse_vectors, texts)
         ]
         
         client.upsert(
@@ -57,16 +59,31 @@ class QdrantWorker():
     @staticmethod
     def retrieve(
         collection_name: str,
-        query: List[float]
-    ) -> QueryResponse:
+        query: List[float],
+        query_indices: List[int],
+        query_values: List[float]
+    ) -> List[QueryResponse]:
         
-        search_result = client.query_points(
+        search_result = client.query_batch_points(
             collection_name=collection_name,
-            query=query,
-            with_payload=True,
-            limit=3,
-            using="text-embedding"
-        ).points
+            requests=[
+                models.QueryRequest(
+                    query=query,
+                    using="dense-embedding",
+                    limit=50, 
+                    with_payload=True
+                ),
+                models.QueryRequest(
+                    query=models.SparseVector(
+                        indices=query_indices,
+                        values=query_values,
+                    ),
+                    limit=50, 
+                    with_payload=True,
+                    using="sparse-embedding"
+                ),
+            ]
+        )
         
         return search_result
     
