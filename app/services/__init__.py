@@ -1,2 +1,2 @@
-from .embed import Embedder
+from .embedding import Embedder
 from .llm import LLM

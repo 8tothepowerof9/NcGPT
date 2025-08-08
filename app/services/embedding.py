@@ -61,7 +61,7 @@ class Embedder:
         Returns:
             int: The size of the embedding vector.
         """
-        sample_embedding = self.client.embed_query(text="Dit Me Duy")
+        sample_embedding = self.client.embed_query(text="Embed Query Example")
         return len(sample_embedding)
 
     def get_client(self) -> Embeddings:
