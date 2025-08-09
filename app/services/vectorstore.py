@@ -25,6 +25,13 @@ class VectorStore:
     """
 
     def __init__(self, url: str = QDRANT_URL, api_key: str = QDRANT_API_KEY):
+        """
+        Initialize the VectorStore with a Qdrant client.
+
+        Args:
+            url (str, optional): Url to Qdrant storage. If using local, set to "http://localhost:6333". Defaults to QDRANT_URL.
+            api_key (str, optional): api key of Qdrant storage. If using local, this can be None. Defaults to QDRANT_API_KEY.
+        """
         self.client = QdrantClient(url=url, api_key=api_key)
         self.__configs: Dict[str, QdrantCollectionConfig] = {}
 
