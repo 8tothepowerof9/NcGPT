@@ -12,22 +12,22 @@ async def compute_query_vectors(prompt):
     return dense_vector, sparse_indices, sparse_values
 
 if __name__ == "__main__":
-    COLLECTION_NAME = "dspy"
-    prompt = """How can I use dspy.Signature?"""
+    COLLECTION_NAME = "crawl4ai"
+    prompt = """How to exclude tag for with specific name in html?"""
 
     query, query_indices, query_values = asyncio.run(embedder.hybrid_embed_query(text=prompt))
 
     # Retrieve and rank results
     points = qdrant_worker.retrieve(
-        collection_name=COLLECTION_NAME, 
+        collection_name=COLLECTION_NAME,
         query=query,
         query_indices=query_indices,
         query_values=query_values
     )
     
-    results = helper.reciprocal_rank_fusion(points=points, payload=["text"], n_points=3)
+    results = helper.reciprocal_rank_fusion(points=points, payload=["text"], n_points=7)
     
     print()
-    for result in results:   
+    for result in results:
         print(result)
         print("\n")

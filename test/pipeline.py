@@ -10,17 +10,15 @@ from langchain_community.document_loaders.text import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 if __name__ == "__main__":
-    COLLECTION_NAME = "dspy"
+    COLLECTION_NAME = "unsloth"
     BATCH_SIZE = 100
     
     loader = DirectoryLoader(
-        r"D:\NcGPT\test\output",
+        path=r"D:\NcGPT\test\{}".format(COLLECTION_NAME),
         glob="**/*.txt",
-        loader_cls=TextLoader, 
-        loader_kwargs={
-            "autodetect_encoding": True
-        },
-        show_progress=True
+        loader_cls=TextLoader,
+        loader_kwargs={"autodetect_encoding": True},
+        show_progress=True,
     )
     
     qdrant_worker.create_collection(collection_name=COLLECTION_NAME)
@@ -32,7 +30,6 @@ if __name__ == "__main__":
     # Solution 1: Configure OllamaEmbeddings with specific parameters
     embeddings = OllamaEmbeddings(
         model="mxbai-embed-large",
-        num_ctx=4096,  # Adjust context window size
     )
     
     try:
@@ -40,8 +37,8 @@ if __name__ == "__main__":
         lc_semantic_chunker = SemanticChunker(
             embeddings=embeddings,
             # Add these parameters to control batching
-            breakpoint_threshold_type="percentile",
-            breakpoint_threshold_amount=95,
+            min_chunk_size=150,       # Initial split size
+            breakpoint_threshold_amount=90,
         )
         
         # Process texts one by one instead of in batches

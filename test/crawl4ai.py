@@ -7,11 +7,11 @@ from typing import List
 from urllib.parse import urlparse
 from app.utils.helper import helper
 from crawl4ai.markdown_generation_strategy import DefaultMarkdownGenerator
+from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
 from crawl4ai.content_filter_strategy import PruningContentFilter, LLMContentFilter
-from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode, LLMConfig
 
 __location__ = os.path.dirname(os.path.abspath(__file__))
-__output__ = os.path.join(__location__, "output")
+__output__ = os.path.join(__location__, "openai")
 os.makedirs(__output__, exist_ok=True)
 
 # Append parent directory to system path
@@ -101,8 +101,12 @@ async def crawl_parallel(urls: List[str], max_concurrent: int = 3):
     crawl_config = CrawlerRunConfig(
         cache_mode=CacheMode.BYPASS, 
         markdown_generator=md_generator,
-        # Tag exclusions
-        excluded_tags=['form', 'header', 'footer', 'nav', 'sidebar'],
+        excluded_tags=['form', 'header', 'footer', 'nav', 'sidebar', 'aside'],
+        exclude_internal_links=True,
+        exclude_external_links=True,
+        exclude_all_images=True,
+        target_elements=['main'],
+        prettiify=True,
     )
 
     crawler = AsyncWebCrawler(config=browser_config)
@@ -162,9 +166,8 @@ async def crawl_parallel(urls: List[str], max_concurrent: int = 3):
         log_memory(prefix="Final: ")
         print(f"\nPeak memory usage (MB): {peak_memory // (1024 * 1024)}")
 
-
 async def main():
-    urls = helper.get_urls_from_sitemap("https://www.langchain.com/sitemap.xml")
+    urls = helper.get_urls_from_sitemap("https://platform.openai.com/sitemap.xml")
     if urls:
         print(f"Found {len(urls)} URLs to crawl")
         print(f"Output will be saved to: {__output__}")

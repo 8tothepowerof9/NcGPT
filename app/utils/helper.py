@@ -1,3 +1,4 @@
+import os
 import heapq
 import requests
 import traceback
@@ -67,4 +68,29 @@ class Helper:
         soup = BeautifulSoup(response.text, "xml")
         return [loc.get_text(strip=True) for loc in soup.find_all("loc")]
     
+    @staticmethod
+    def clean_file(filepath: str, unwanted_block: str):
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        # Remove unwanted block if it appears at the beginning
+        if content.startswith(unwanted_block):
+            print(f"Cleaning: {os.path.basename(filepath)}")
+            cleaned = content[len(unwanted_block):].lstrip()  # Also remove extra newlines
+            with open(filepath, "w", encoding="utf-8") as f:
+                f.write(cleaned)
+
+    @staticmethod
+    def clean_all_txt_files(folder_path: str, unwanted_block: str):
+        for root, _, files in os.walk(folder_path):
+            for file in files:
+                if file.endswith(".txt"):
+                    filepath = os.path.join(root, file)
+                    Helper.clean_file(filepath, unwanted_block)
+
+    
 helper = Helper()
+
+unwanted_block = """"""
+    
+helper.clean_all_txt_files(r"D:\NcGPT\test\anthropic", unwanted_block=unwanted_block)

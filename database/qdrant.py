@@ -21,7 +21,7 @@ class QdrantWorker():
                 collection_name=collection_name,
                 vectors_config={
                     "dense-embedding": models.VectorParams(
-                        size=1024   ,
+                        size=1024,
                         distance=models.Distance.COSINE
                     )
                 },
