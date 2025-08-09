@@ -3,8 +3,8 @@ tiktoken
 boto3
 langchain-community
 langchain
-langchain-openai
-langchain-ollama
+fastapi
+dspy
 python-dotenv
 unstructured
 unstructured[pdf]

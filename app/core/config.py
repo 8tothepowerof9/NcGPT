@@ -18,22 +18,18 @@ if LLM_PROVIDER not in ["openai", "ollama", "vllm"]:
 if EMBEDDER_PROVIDER not in ["openai", "ollama"]:
     raise ValueError("EMBEDDER_PROVIDER must be one of 'openai' or 'ollama'")
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", None)
+API_KEY = os.getenv("API_KEY", None)
 
-if LLM_PROVIDER == "openai" and not OPENAI_API_KEY:
-    raise ValueError(
-        "OPENAI_API_KEY must be set when using OpenAI as the LLM provider."
-    )
+if LLM_PROVIDER == "openai" and not API_KEY:
+    raise ValueError("API_KEY must be set when using OpenAI as the LLM provider.")
 
 MODEL_NAME = os.getenv("MODEL_NAME", None)
 
 if not MODEL_NAME:
     raise ValueError("MODEL_NAME must be set.")
 
-if EMBEDDER_PROVIDER == "openai" and not OPENAI_API_KEY:
-    raise ValueError(
-        "OPENAI_API_KEY must be set when using OpenAI as the embedder provider."
-    )
+if EMBEDDER_PROVIDER == "openai" and not API_KEY:
+    raise ValueError("API_KEY must be set when using OpenAI as the embedder provider.")
 
 EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", None)
 
