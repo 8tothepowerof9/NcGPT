@@ -13,6 +13,14 @@ class Provider(Enum):
     OPENAI = "openai"
     OLLAMA = "ollama_chat"
 
+    @property
+    def default_api_base(self):
+        if self == Provider.OPENAI:
+            return  # Not needed for OpenAI
+        elif self == Provider.OLLAMA:
+            return "http://localhost:11434"
+        return None
+
 
 @dataclass(frozen=True)
 class LLMConfig:

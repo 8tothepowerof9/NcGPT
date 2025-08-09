@@ -144,8 +144,8 @@ class Embedder:
     def compute_hybrid_vector(
         self,
         text: str,
-        tokenizer_name: Optional[str] = None,
-        embedder_name: Optional[str] = None,
+        tokenizer_name: str = "naver/splade-cocondenser-ensembledistil",
+        embedder_name: str = "naver/splade-cocondenser-ensembledistil",
         max_length: int = 512,
         truncation: bool = True,
         padding: str = "longest",
@@ -156,8 +156,8 @@ class Embedder:
 
         Args:
             text (str): The input text to embed.
-            tokenizer_name (str, optional): Name of the tokenizer model.
-            embedder_name (str, optional): Name of the embedder model.
+            tokenizer_name (str, optional): Name of the tokenizer model. Defaults to "naver/splade-cocondenser-ensembledistil".
+            embedder_name (str, optional): Name of the embedder model. Defaults to "naver/splade-cocondenser-ensembledistil".
             max_length (int, optional): Maximum sequence length.
             truncation (bool, optional): Whether to truncate sequences.
             padding (str, optional): Padding strategy.

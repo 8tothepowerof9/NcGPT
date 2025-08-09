@@ -1,2 +1,2 @@
 from .embedding import Embedder
-from .llm import LLM
+from .vectorstore import VectorStore

@@ -1,6 +1,14 @@
 import dspy
 from contextlib import contextmanager
 from ..models import Provider, LLMConfig
+from ..core.config import MODEL_NAME, LLM_PROVIDER, API_KEY
+
+
+default_config = LLMConfig(
+    provider=LLM_PROVIDER,
+    model=MODEL_NAME,
+    api_key=API_KEY,
+)
 
 
 class DspyLLM:
@@ -11,7 +19,7 @@ class DspyLLM:
 
     OLLAMA_API_BASE = "http://localhost:11434"
 
-    def __init__(self, config: LLMConfig):
+    def __init__(self, config: LLMConfig = default_config):
         """
         Initializes the DspyLLM with the given configuration.
 
@@ -32,10 +40,8 @@ class DspyLLM:
         prefix = self.config.provider.value
         name = f"{prefix}/{self.config.model}"
 
-        # Default for local ollama if not provided
-        api_base = self.config.api_base
-        if not api_base and self.config.provider == Provider.OLLAMA:
-            api_base = self.OLLAMA_API_BASE
+        # Use default api_base from Provider if not set in config
+        api_base = self.config.api_base or self.config.provider.default_api_base
 
         return dspy.LM(
             name, api_base=api_base, api_key=self.config.api_key, **self.config.extra
