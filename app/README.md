@@ -9,7 +9,6 @@
 | `programs/`  | DSPy modules for prompt engineering and LLM calls                   |
 | `services/`  | I/O adapters for DB, HTTP, file, vector stores                      |
 | `tools/`     | Pure tool functions for agent/tool calling                          |
-| `utils/`     | Utility functions for embedding, text, helpers                      |
 | `pipelines/` | Data processing pipelines (chunking, indexing, etc.)                |
 | `runtime/`   | Execution and runtime management                                    |
 
@@ -37,9 +36,6 @@
 
 - **tools/**  
   Contains pure, side-effect-free functions designed for use as callable tools in agent workflows.
-
-- **utils/**  
-  Provides reusable utilities for embedding, text processing, and helper functions.
 
 - **pipelines/**  
   Implements chunking, indexing, and other document/data processing workflows.
