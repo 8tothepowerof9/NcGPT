@@ -255,23 +255,27 @@ class VectorStore:
             QueryResponse: The search results.
         """
         cfg = self.get_config(collection_name)
+        prefetch_args_dense = {
+            "query": list(dense_query),
+            "using": cfg.dense_name,
+            "limit": k,
+        }
+        prefetch_args_sparse = {
+            "query": models.SparseVector(
+                indices=list(sparse_idx), values=list(sparse_val)
+            ),
+            "using": cfg.sparse_name,
+            "limit": k,
+        }
+        if query_filter is not None:
+            prefetch_args_dense["query_filter"] = query_filter
+            prefetch_args_sparse["query_filter"] = query_filter
+
         return self.client.query_points(
             collection_name=collection_name,
             prefetch=[
-                models.Prefetch(
-                    query=list(dense_query),
-                    using=cfg.dense_name,
-                    limit=k,
-                    query_filter=query_filter,
-                ),
-                models.Prefetch(
-                    query=models.SparseVector(
-                        indices=list(sparse_idx), values=list(sparse_val)
-                    ),
-                    using=cfg.sparse_name,
-                    limit=k,
-                    query_filter=query_filter,
-                ),
+                models.Prefetch(**prefetch_args_dense),
+                models.Prefetch(**prefetch_args_sparse),
             ],
             query=models.FusionQuery(fusion=fusion),
             with_payload=True,
